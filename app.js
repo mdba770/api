@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const feedRoutes = require('./routes/feed');
 
 // configuration
@@ -15,4 +16,16 @@ app.use((req, res, next) => {
 // routes
 app.use('/feed', feedRoutes);
 
-app.listen(5000);
+//DB
+mongoose
+    .connect(
+        'mongodb+srv://julia:0utLbe4oifmYib1N@cluster0-acecb.mongodb.net/cms?retryWrites=true&w=majority',
+        { useNewUrlParser: true, useUnifiedTopology: true }
+    )
+    .then(result => {
+        app.listen(5000);
+    })
+    .catch(err => {
+        console.log(err);
+    });
+   
