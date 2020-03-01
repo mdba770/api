@@ -20,4 +20,17 @@ router.post('/post', [
         .trim()
 ], feedController.createPost);
 
+// PUT /feed/post/:postId
+router.put('/post/:postId', [
+    body('title')
+        .isLength({min: 3})
+        .trim(),
+    body('content')
+        .isLength({min: 3})
+        .trim()
+], feedController.updatePost);
+
+// DELETE /feed/post/:postId
+router.delete('/post/:postId', feedController.deletePost);
+
 module.exports = router;
