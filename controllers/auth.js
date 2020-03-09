@@ -4,19 +4,20 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 exports.signup = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        // const error = new Error('Validation failed.');
-        const error = new Error(errors.array()[0].msg);
-        error.statusCode = 422;
-        error.data = errors.array();
-        throw error;
-    }
-    const email = req.body.email;
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const password = req.body.password;
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // const error = new Error('Validation failed.');
+            const error = new Error(errors.array()[0].msg);
+            error.statusCode = 422;
+            error.data = errors.array();
+            throw error;
+        }
+        const email = req.body.email;
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const password = req.body.password;
+    
         const hashedPw = await bcrypt.hash(password, 12);
         
         const user = new User({
@@ -41,10 +42,11 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    let loadedUser;
     try {
+        const email = req.body.email;
+        const password = req.body.password;
+        let loadedUser;
+   
         const user = await User.findOne({email: email});
     
             if(!user){
@@ -63,7 +65,7 @@ exports.login = async (req, res, next) => {
             const token = jwt.sign({
                 email: loadedUser.email,
                 userId: loadedUser._id.toString()
-            }, 'secret', { expiresIn: '1h' });
+            }, 'secret', { expiresIn: '9h' });
             res.status(200).json({
                 token: token,
                 userId: loadedUser._id.toString()
