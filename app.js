@@ -1,5 +1,7 @@
 const express = require('express');
+const fs = require('fs');
 const helmet = require('helmet');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -38,6 +40,11 @@ app.use((req, res, next) => {
     next();
 });
 app.use(helmet());
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'access.log'),
+    {flags: 'a'}
+);
+app.use(morgan('combined', {stream: accessLogStream}));
 
 // routes
 app.use('/feed', feedRoutes);
