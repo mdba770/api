@@ -54,11 +54,12 @@ app.use((error,req,res,next) => {
 //DB
 mongoose
     .connect(
-        'mongodb+srv://julia:0utLbe4oifmYib1N@cluster0-acecb.mongodb.net/cms?retryWrites=true&w=majority',
+        // 'mongodb+srv://julia:0utLbe4oifmYib1N@cluster0-acecb.mongodb.net/cms?retryWrites=true&w=majority',
+        process.env.MONGODB_CONNECTION_STRING,
         { useNewUrlParser: true, useUnifiedTopology: true }
     )
     .then(result => {
-        app.listen(5000);
+        app.listen(process.env.PORT || 5000);
         // const server = app.listen(5000);
         // const io = require('./socket').init(server);
         // io.on('connection', socket => {
