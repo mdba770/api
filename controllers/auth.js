@@ -65,13 +65,44 @@ exports.login = async (req, res, next) => {
             const token = jwt.sign({
                 email: loadedUser.email,
                 userId: loadedUser._id.toString()
-            }, 'secret', { expiresIn: '9h' });
+            }, 'secret', { expiresIn: '1h' });
             res.status(200).json({
                 token: token,
-                userId: loadedUser._id.toString()
+                user: {
+                    email: loadedUser.email,
+                    firstName: loadedUser.firstName,
+                    lastName: loadedUser.lastName,
+                    posts: loadedUser.posts,
+                    status: loadedUser.status
+                }
             });
 
     } catch (err) {
+        if(!err.statusCode) {
+             err.statusCode = 500;
+        }
+        next(err);
+    }
+}
+
+exports.getMe = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.userId)
+        if(!user) {
+            const error = new Error('User not found.');
+            error.statusCode = 404;
+            throw error;
+        }
+        res.status(200).json({
+            user: {
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                posts: user.posts,
+                status: user.status
+            }
+        });
+    } catch(err) {
         if(!err.statusCode) {
              err.statusCode = 500;
         }

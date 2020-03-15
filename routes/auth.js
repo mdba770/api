@@ -36,6 +36,8 @@ router.put('/signup', [
 
 router.post('/login', authController.login);
 
+router.get('/me', isAuth, authController.getMe);
+
 router.get('/status', isAuth, authController.getUserStatus);
 
 router.patch('/status', isAuth, [
