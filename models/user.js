@@ -18,14 +18,19 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    status: {
-        type: String,
-        default: ''
+    role: {
+        type: Schema.Types.ObjectId,
+        ref: 'Role',
+        required: false
     },
+    // status: {
+    //     type: String,
+    //     default: ''
+    // },
     posts: [{
         type: Schema.Types.ObjectId,
         ref: 'Post'
     }]
-});
+}, {timestamps: true});
 
 module.exports = mongoose.model('User', userSchema);
