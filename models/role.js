@@ -11,9 +11,8 @@ const roleSchema = new Schema({
         required: false
     },
     isActive: {
-        type: Boolean,
-        default: true,
-        required: true
+        type: Boolean
+        // required: true
     },
     // model: {
 

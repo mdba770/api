@@ -9,6 +9,7 @@ const multer = require('multer');
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
+const roleRoutes = require('./routes/role');
 
 // configuration
 const app = express();
@@ -51,6 +52,7 @@ app.use(morgan('combined', {stream: accessLogStream}));
 app.use('/feed', feedRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/role', roleRoutes);
 
 
 // errors
