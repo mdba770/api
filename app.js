@@ -10,6 +10,7 @@ const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const roleRoutes = require('./routes/role');
+const permissionRoutes = require('./routes/permission');
 
 // configuration
 const app = express();
@@ -53,6 +54,7 @@ app.use('/feed', feedRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/role', roleRoutes);
+app.use('/permission', permissionRoutes);
 
 
 // errors
@@ -61,7 +63,8 @@ app.use((error,req,res,next) => {
     const status = error.statusCode || 500;
     const message = error.message;
     const data = error.data;
-    res.status(status).json({message: message, data: data});
+    const errorCode = error.errorCode || 1;
+    res.status(status).json({message: message, data: data, errorCode: errorCode});
 });
 
 //DB

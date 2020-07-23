@@ -3,6 +3,12 @@ const Role = require('../models/role');
 
 
 exports.getRoles = async (req, res, next) => {
+    // const path = req.route.path; //originalUrl
+    // const originalMethod = req.method;
+    // console.log(path);
+    // console.log(originalMethod);
+    
+
     const currentPage = req.query.page || 1;
     const perPage = 10;
     try {
@@ -34,13 +40,13 @@ exports.createRole = async (req, res, next) => {
             throw error;
         }
         
-        const title = req.body.title;
+        const name = req.body.name;
+        const displayName = req.body.displayName;
         const description = req.body.description;
-        const isActive = req.body.isActive;
         const role = new Role({
-            title: title,
-            description: description,
-            isActive: isActive
+            name: name,
+            displayName: displayName,
+            description: description
         });
     
         await role.save();
@@ -49,6 +55,32 @@ exports.createRole = async (req, res, next) => {
             message: 'Role created successfully!',
             role: role
         });
+    } catch (err) {
+       if(!err.statusCode) {
+            err.statusCode = 500;
+       }
+       next(err);
+    }
+};
+
+exports.getRole = async (req, res, next) => {
+    // const path = req.route.path; //originalUrl
+    // const originalMethod = req.method;
+    // console.log(path);
+    // console.log(originalMethod);
+
+    const roleId = req.params.roleId;
+    try {
+        const role = await Role.findById(roleId);
+        if(!role) {
+            const error = new Error('Could not find role.');
+            error.statusCode = 404;
+            throw error;
+        }
+        res.status(200).json({
+            message: 'Role fetched.',
+            role: role
+        })
     } catch (err) {
        if(!err.statusCode) {
             err.statusCode = 500;

@@ -10,4 +10,7 @@ router.get('/roles', isAuth, roleController.getRoles);
 // POST /role/role
 router.post('/role', isAuth, roleController.createRole);
 
+// GET /role/role/:roleId
+router.get('/role/:roleId', roleController.getRole);
+
 module.exports = router;
