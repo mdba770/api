@@ -7,7 +7,7 @@ const isSecure = require('../middleware/is-secure');
 const router = express.Router();
 
 // GET /feed/posts
-router.get('/posts', isSecure, feedController.getPosts);
+router.get('/posts', isAuth, isSecure, feedController.getPosts);
 
 // GET /feed/post/:postId
 router.get('/post/:postId', feedController.getPost);
