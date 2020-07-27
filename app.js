@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const roleRoutes = require('./routes/role');
 const permissionRoutes = require('./routes/permission');
+require('dotenv').config();
 
 // configuration
 const app = express();

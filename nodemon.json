@@ -1,7 +1,0 @@
-{
-    "env": {
-        "MONGODB_CONNECTION_STRING": "mongodb+srv://julia:0utLbe4oifmYib1N@cluster0-acecb.mongodb.net/cms?retryWrites=true&w=majority",
-        "PORT":"5000",
-        "NODE_ENV":"development"
-    }
-}
