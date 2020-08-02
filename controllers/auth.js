@@ -72,8 +72,8 @@ exports.login = async (req, res, next) => {
                     email: loadedUser.email,
                     firstName: loadedUser.firstName,
                     lastName: loadedUser.lastName,
-                    posts: loadedUser.posts,
-                    status: loadedUser.status
+                    posts: loadedUser.posts
+                    // status: loadedUser.status
                 }
             });
 
