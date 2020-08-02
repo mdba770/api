@@ -4,7 +4,7 @@ const Permission = require('../models/permission');
 
 exports.getPermissions = async (req, res, next) => {
     const currentPage = req.query.page || 1;
-    const perPage = 10;
+    const perPage = 100;
     try {
         const totalItems = await Permission.find().countDocuments();
         const permissions = await Permission.find()
@@ -29,14 +29,14 @@ exports.getPermissions = async (req, res, next) => {
 exports.getPermissionsByRole = async (req, res, next) => {
     const currentRole = req.params.roleId;
     const currentPage = req.query.page || 1;
-    const perPage = 10;
+    // const perPage = 10;
     try {
         const totalItems = await Permission.find({role: currentRole}).countDocuments();
         const permissions = await Permission.find({role: currentRole})
             // .populate('role')
-            .sort({resource: 1})
-            .skip((currentPage - 1) * perPage)
-            .limit(perPage);
+            // .sort({resource: 1})
+            // .skip((currentPage - 1) * perPage)
+            // .limit(perPage);
             
             const permissionsByRole = permissions.reduce((accumulator, permission) => {
                 accumulator[permission.resource] = (accumulator[permission.resource] || []).concat(permission);
