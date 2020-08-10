@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const roleRoutes = require('./routes/role');
 const permissionRoutes = require('./routes/permission');
+const productRoutes = require('./routes/product');
 require('dotenv').config();
 
 // configuration
@@ -56,6 +57,7 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/role', roleRoutes);
 app.use('/permission', permissionRoutes);
+app.use('/product', productRoutes);
 
 
 // errors
