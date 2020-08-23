@@ -17,4 +17,7 @@ router.post('/product', isAuth, [
         .trim()
 ], productController.createProduct);
 
+// PUT /product/product/:productId
+router.put('/product/:productId', isAuth, productController.updateProduct);
+
 module.exports = router;
