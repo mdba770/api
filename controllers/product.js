@@ -107,7 +107,7 @@ exports.updateProduct = async (req, res, next) => {
             throw error;
         }
 
-        const thumbnail = req.body.thumbnail;
+        let thumbnail = req.body.thumbnail;
         const title = req.body.title;
         const description = req.body.description;
         const shortDescription = req.body.shortDescription;
@@ -128,7 +128,7 @@ exports.updateProduct = async (req, res, next) => {
         if(thumbnail !== product.thumbnail) {
             clearImage(product.thumbnail);
         }
-        
+
         product.thumbnail = thumbnail;
         product.title = title;
         product.description = description;
