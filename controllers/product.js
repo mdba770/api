@@ -11,6 +11,7 @@ exports.getProducts = async (req, res, next) => {
         const totalItems = await Product.find().countDocuments();
         const products = await Product.find()
             .populate('creator')
+            .populate('brand')
             .sort({createdAt: -1})
             .skip((currentPage - 1) * perPage)
             .limit(perPage);
@@ -57,13 +58,18 @@ exports.createProduct = async (req, res, next) => {
             error.statusCode = 422;
             throw error;
         }
-        const thumbnail = req.file.path;
+        
+        let thumbnail = '';
+        if (req.file) {
+            thumbnail = req.file.path;
+        }
         const title = req.body.title;
         const description = req.body.description;
         const shortDescription = req.body.shortDescription;
         const enabled = req.body.enabled;
         const quantity = req.body.quantity;
         const price = req.body.price;
+        const brand = req.body.brand;
 
         const product = new Product({
             title: title,
@@ -73,7 +79,8 @@ exports.createProduct = async (req, res, next) => {
             quantity: quantity,
             price: price,
             thumbnail: thumbnail,
-            creator: req.userId
+            creator: req.userId,
+            brand: brand
         });
     
         await product.save();
@@ -114,6 +121,10 @@ exports.updateProduct = async (req, res, next) => {
         const enabled = req.body.enabled;
         const quantity = req.body.quantity;
         const price = req.body.price;
+        let brand = '';
+        if (req.body.brand) {
+            brand = req.body.brand;
+        }
         if(req.file) {
             thumbnail = req.file.path;
         }
@@ -136,6 +147,7 @@ exports.updateProduct = async (req, res, next) => {
         product.enabled = enabled;
         product.quantity = quantity;
         product.price = price;
+        product.brand = brand;
 
         const result = await  product.save();
         
