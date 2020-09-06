@@ -11,7 +11,6 @@ exports.getProducts = async (req, res, next) => {
         const totalItems = await Product.find().countDocuments();
         const products = await Product.find()
             .populate('creator')
-            .populate('brand')
             .sort({createdAt: -1})
             .skip((currentPage - 1) * perPage)
             .limit(perPage);
