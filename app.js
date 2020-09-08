@@ -8,6 +8,7 @@ const path = require('path');
 const multer = require('multer');
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
+const frontAuthRoutes = require('./routes/front/auth');
 const userRoutes = require('./routes/user');
 const roleRoutes = require('./routes/role');
 const permissionRoutes = require('./routes/permission');
@@ -57,6 +58,7 @@ app.use(morgan('combined', {stream: accessLogStream}));
 // routes
 app.use('/feed', feedRoutes);
 app.use('/auth', authRoutes);
+app.use('/front/auth', frontAuthRoutes);
 app.use('/user', userRoutes);
 app.use('/role', roleRoutes);
 app.use('/permission', permissionRoutes);
