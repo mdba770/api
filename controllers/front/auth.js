@@ -1,7 +1,7 @@
 const {validationResult} = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../../models/user');
+const Customer = require('../../models/customer');
 
 exports.signup = async (req, res, next) => {
     try {
@@ -20,17 +20,26 @@ exports.signup = async (req, res, next) => {
     
         const hashedPw = await bcrypt.hash(password, 12);
         
-        const user = new User({
+        const customer = new Customer({
             email: email,
             password: hashedPw,
             firstName: firstName,
             lastName: lastName
         });
-        const result = await user.save();
-        
+        const result = await customer.save();
+            const token = jwt.sign({
+                email: result.email,
+                customerId: result._id.toString()
+            }, 'secret', { expiresIn: '1h' });
+
             res.status(201).json({
-                message: 'User created.',
-                userId: result._id
+                message: 'Customer created.',
+                token: token,
+                customer: {
+                    email: result.email,
+                    firstName: result.firstName,
+                    lastName: result.lastName
+                }
             });
     } catch (err) {
         if(!err.statusCode) {
@@ -45,17 +54,17 @@ exports.login = async (req, res, next) => {
     try {
         const email = req.body.email;
         const password = req.body.password;
-        let loadedUser;
+        let loadedCustomer;
    
-        const user = await User.findOne({email: email});
+        const customer = await Customer.findOne({email: email});
     
-            if(!user){
-                const error = new Error('A user with this email could not be found.');
+            if(!customer){
+                const error = new Error('A customer with this email could not be found.');
                 error.statusCode = 401;
                 throw error;
             }
-            loadedUser = user;
-        const isEqual = await bcrypt.compare(password, user.password);
+            loadedCustomer = customer;
+        const isEqual = await bcrypt.compare(password, customer.password);
         
             if(!isEqual) {
                 const error = new Error('Wrong email or password.');
@@ -63,15 +72,15 @@ exports.login = async (req, res, next) => {
                 throw error;
             }
             const token = jwt.sign({
-                email: loadedUser.email,
-                userId: loadedUser._id.toString()
+                email: loadedCustomer.email,
+                customerId: loadedCustomer._id.toString()
             }, 'secret', { expiresIn: '1h' });
             res.status(200).json({
                 token: token,
-                user: {
-                    email: loadedUser.email,
-                    firstName: loadedUser.firstName,
-                    lastName: loadedUser.lastName
+                customer: {
+                    email: loadedCustomer.email,
+                    firstName: loadedCustomer.firstName,
+                    lastName: loadedCustomer.lastName
                 }
             });
 
@@ -85,17 +94,17 @@ exports.login = async (req, res, next) => {
 
 exports.getMe = async (req, res, next) => {
     try {
-        const user = await User.findById(req.userId)
-        if(!user) {
-            const error = new Error('User not found.');
+        const customer = await Customer.findById(req.customerId)
+        if(!customer) {
+            const error = new Error('Customer not found.');
             error.statusCode = 404;
             throw error;
         }
         res.status(200).json({
-            user: {
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName
+            customer: {
+                email: customer.email,
+                firstName: customer.firstName,
+                lastName: customer.lastName
             }
         });
     } catch(err) {

@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/products', isAuth, productController.getProducts);
 
 // GET /product/product/:productId
-router.get('/product/:productId', productController.getProduct);
+router.get('/product/:productId', isAuth, productController.getProduct);
 
 // POST /product/product
 router.post('/product', isAuth, [
