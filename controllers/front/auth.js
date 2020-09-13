@@ -29,7 +29,7 @@ exports.signup = async (req, res, next) => {
         const result = await customer.save();
             const token = jwt.sign({
                 email: result.email,
-                customerId: result._id.toString()
+                userId: result._id.toString()
             }, 'secret', { expiresIn: '1h' });
 
             res.status(201).json({
@@ -73,7 +73,7 @@ exports.login = async (req, res, next) => {
             }
             const token = jwt.sign({
                 email: loadedCustomer.email,
-                customerId: loadedCustomer._id.toString()
+                userId: loadedCustomer._id.toString()
             }, 'secret', { expiresIn: '1h' });
             res.status(200).json({
                 token: token,
@@ -94,7 +94,7 @@ exports.login = async (req, res, next) => {
 
 exports.getMe = async (req, res, next) => {
     try {
-        const customer = await Customer.findById(req.customerId)
+        const customer = await Customer.findById(req.userId)
         if(!customer) {
             const error = new Error('Customer not found.');
             error.statusCode = 404;
