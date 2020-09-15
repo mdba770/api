@@ -38,7 +38,8 @@ exports.signup = async (req, res, next) => {
                 customer: {
                     email: result.email,
                     firstName: result.firstName,
-                    lastName: result.lastName
+                    lastName: result.lastName,
+                    cart: result.cart
                 }
             });
     } catch (err) {
@@ -80,7 +81,8 @@ exports.login = async (req, res, next) => {
                 customer: {
                     email: loadedCustomer.email,
                     firstName: loadedCustomer.firstName,
-                    lastName: loadedCustomer.lastName
+                    lastName: loadedCustomer.lastName,
+                    cart: loadedCustomer.cart
                 }
             });
 
@@ -104,7 +106,8 @@ exports.getMe = async (req, res, next) => {
             customer: {
                 email: customer.email,
                 firstName: customer.firstName,
-                lastName: customer.lastName
+                lastName: customer.lastName,
+                cart: customer.cart
             }
         });
     } catch(err) {

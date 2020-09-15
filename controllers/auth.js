@@ -98,8 +98,7 @@ exports.getMe = async (req, res, next) => {
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
-                posts: user.posts,
-                status: user.status
+                posts: user.posts
             }
         });
     } catch(err) {

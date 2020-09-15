@@ -65,7 +65,7 @@ customerSchema.methods.addToCart = function(product) {
     this.cart = updatedCart;
     return this.save()
     .then(customer => {
-        console.log(customer);
+        return customer;
     })
     .catch(err => {
         console.log(err);

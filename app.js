@@ -15,6 +15,7 @@ const permissionRoutes = require('./routes/permission');
 const productRoutes = require('./routes/product');
 const frontProductRoutes = require('./routes/front/product');
 const brandRoutes = require('./routes/brand');
+const frontCartRoutes = require('./routes/front/cart');
 require('dotenv').config();
 
 
@@ -65,6 +66,7 @@ app.use('/permission', permissionRoutes);
 app.use('/product', productRoutes);
 app.use('/front/product', frontProductRoutes);
 app.use('/brand', brandRoutes);
+app.use('/front/cart', frontCartRoutes);
 
 
 // errors
