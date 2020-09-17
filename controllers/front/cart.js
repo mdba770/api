@@ -4,7 +4,7 @@ const Customer = require('../../models/customer');
 
 exports.addToCart = async (req, res, next) => {
     try {
-        const prodId = req.body.productId;
+        const prodId = req.body.product;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             const error = new Error(errors.array()[0].msg);
@@ -26,10 +26,13 @@ exports.addToCart = async (req, res, next) => {
             throw error;
         }
 
-        const result = await customer.addToCart(product);
+        await customer.addToCart(product);
+
+        const updatedCustomer = await Customer.findById(req.userId).populate('cart.items.product', 'title thumbnail price');
+
         res.status(200).json({
             message: 'Cart updated!!',
-            customer: result
+            customer: updatedCustomer
         });
 
     }catch (err) {

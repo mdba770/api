@@ -57,7 +57,8 @@ exports.login = async (req, res, next) => {
         const password = req.body.password;
         let loadedCustomer;
    
-        const customer = await Customer.findOne({email: email});
+        const customer = await Customer.findOne({email: email})
+                .populate('cart.items.product', 'title thumbnail price');
     
             if(!customer){
                 const error = new Error('A customer with this email could not be found.');
@@ -97,6 +98,7 @@ exports.login = async (req, res, next) => {
 exports.getMe = async (req, res, next) => {
     try {
         const customer = await Customer.findById(req.userId)
+            .populate('cart.items.product', 'title thumbnail price');
         if(!customer) {
             const error = new Error('Customer not found.');
             error.statusCode = 404;
