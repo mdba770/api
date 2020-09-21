@@ -77,7 +77,13 @@ customerSchema.methods.removeFromCart = function(productId) {
         return item.product.toString() !== productId.toString();
     });
     this.cart.items = updatedCartItems;
-    return this.save();
+    return this.save()
+    .then(customer => {
+        return customer;
+    })
+    .catch(err => {
+        console.log(err);
+    })
 }
 
 customerSchema.methods.clearCart = function() {
