@@ -45,16 +45,21 @@ const customerSchema = new Schema({
     }
 }, {timestamps: true});
 
-customerSchema.methods.addToCart = function(product) {
+customerSchema.methods.addToCart = function(product, quantity) {
     const cartProductIndex = this.cart.items.findIndex(cp => {
         return cp.product.toString() === product._id.toString();
     });
-    let newQuantity = 1;
+    let newQuantity = quantity;
     const updatedCartItems = [...this.cart.items];
 
     if(cartProductIndex >= 0) {
-        newQuantity = this.cart.items[cartProductIndex].quantity + 1;
-        updatedCartItems[cartProductIndex].quantity = newQuantity;
+        newQuantity = this.cart.items[cartProductIndex].quantity + newQuantity;
+        if(newQuantity <= 0){
+            return this.removeFromCart(product._id);
+        }else{
+            updatedCartItems[cartProductIndex].quantity = newQuantity;
+        }
+        
     } else {
         updatedCartItems.push({
             product: product._id,
