@@ -1,4 +1,4 @@
-const {validationResult} = require('express-validator');
+const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -17,9 +17,9 @@ exports.signup = async (req, res, next) => {
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         const password = req.body.password;
-    
+
         const hashedPw = await bcrypt.hash(password, 12);
-        
+
         const user = new User({
             email: email,
             password: hashedPw,
@@ -27,13 +27,13 @@ exports.signup = async (req, res, next) => {
             lastName: lastName
         });
         const result = await user.save();
-        
-            res.status(201).json({
-                message: 'User created.',
-                userId: result._id
-            });
+
+        res.status(201).json({
+            message: 'User created.',
+            userId: result._id
+        });
     } catch (err) {
-        if(!err.statusCode) {
+        if (!err.statusCode) {
             err.statusCode = 500;
         }
         next(err);
@@ -46,40 +46,40 @@ exports.login = async (req, res, next) => {
         const email = req.body.email;
         const password = req.body.password;
         let loadedUser;
-   
-        const user = await User.findOne({email: email});
-    
-            if(!user){
-                const error = new Error('A user with this email could not be found.');
-                error.statusCode = 401;
-                throw error;
-            }
-            loadedUser = user;
+
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            const error = new Error('A user with this email could not be found.');
+            error.statusCode = 401;
+            throw error;
+        }
+        loadedUser = user;
         const isEqual = await bcrypt.compare(password, user.password);
-        
-            if(!isEqual) {
-                const error = new Error('Wrong email or password.');
-                error.statusCode = 401;
-                throw error;
-            }
-            const token = jwt.sign({
+
+        if (!isEqual) {
+            const error = new Error('Wrong email or password.');
+            error.statusCode = 401;
+            throw error;
+        }
+        const token = jwt.sign({
+            email: loadedUser.email,
+            userId: loadedUser._id.toString()
+        }, 'secret', { expiresIn: '1h' });
+        res.status(200).json({
+            token: token,
+            user: {
                 email: loadedUser.email,
-                userId: loadedUser._id.toString()
-            }, 'secret', { expiresIn: '1h' });
-            res.status(200).json({
-                token: token,
-                user: {
-                    email: loadedUser.email,
-                    firstName: loadedUser.firstName,
-                    lastName: loadedUser.lastName,
-                    posts: loadedUser.posts
-                    // status: loadedUser.status
-                }
-            });
+                firstName: loadedUser.firstName,
+                lastName: loadedUser.lastName,
+                posts: loadedUser.posts
+                // status: loadedUser.status
+            }
+        });
 
     } catch (err) {
-        if(!err.statusCode) {
-             err.statusCode = 500;
+        if (!err.statusCode) {
+            err.statusCode = 500;
         }
         next(err);
     }
@@ -88,7 +88,7 @@ exports.login = async (req, res, next) => {
 exports.getMe = async (req, res, next) => {
     try {
         const user = await User.findById(req.userId)
-        if(!user) {
+        if (!user) {
             const error = new Error('User not found.');
             error.statusCode = 404;
             throw error;
@@ -101,9 +101,9 @@ exports.getMe = async (req, res, next) => {
                 posts: user.posts
             }
         });
-    } catch(err) {
-        if(!err.statusCode) {
-             err.statusCode = 500;
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
         }
         next(err);
     }
@@ -112,7 +112,7 @@ exports.getMe = async (req, res, next) => {
 exports.getUserStatus = async (req, res, next) => {
     try {
         const user = await User.findById(req.userId)
-        if(!user) {
+        if (!user) {
             const error = new Error('User not found.');
             error.statusCode = 404;
             throw error;
@@ -120,9 +120,9 @@ exports.getUserStatus = async (req, res, next) => {
         res.status(200).json({
             status: user.status
         });
-    } catch(err) {
-        if(!err.statusCode) {
-             err.statusCode = 500;
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
         }
         next(err);
     }
@@ -132,20 +132,20 @@ exports.updateUserStatus = async (req, res, next) => {
     const newStatus = req.body.status;
     try {
         const user = await User.findById(req.userId);
-            if(!user) {
-                const error = new Error('User not found.');
-                error.statusCode = 404;
-                throw error;
-            }
-            user.status = newStatus;
+        if (!user) {
+            const error = new Error('User not found.');
+            error.statusCode = 404;
+            throw error;
+        }
+        user.status = newStatus;
 
         const result = await user.save();
-            res.status(200).json({
-                message: 'User updated.'
-            });
+        res.status(200).json({
+            message: 'User updated.'
+        });
     } catch (err) {
-        if(!err.statusCode) {
-             err.statusCode = 500;
+        if (!err.statusCode) {
+            err.statusCode = 500;
         }
         next(err);
     }

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
 const customerSchema = new Schema({
@@ -6,7 +7,7 @@ const customerSchema = new Schema({
         type: String,
         required: true
     },
-    password: {
+    hashPassword: {
         type: String,
         required: true
     },
@@ -44,6 +45,16 @@ const customerSchema = new Schema({
         ]
     }
 }, {timestamps: true});
+
+customerSchema.virtual('password')
+    .set(function(password) {
+        this.hashPassword = bcrypt.hashSync(password, 12);
+    }
+);
+
+customerSchema.methods.authenticate = function(password) {
+    return bcrypt.compareSync(password, this.hashPassword);
+}
 
 customerSchema.methods.addToCart = function(product, quantity) {
     const cartProductIndex = this.cart.items.findIndex(cp => {

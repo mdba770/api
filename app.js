@@ -84,7 +84,7 @@ mongoose
     .connect(
         // 'mongodb+srv://julia:0utLbe4oifmYib1N@cluster0-acecb.mongodb.net/cms?retryWrites=true&w=majority',
         process.env.MONGODB_CONNECTION_STRING,
-        { useNewUrlParser: true, useUnifiedTopology: true }
+        { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
     )
     .then(result => {
         app.listen(process.env.PORT || 5000);
