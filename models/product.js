@@ -6,6 +6,11 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
+    // slug: {
+    //     type: String,
+    //     required: true,
+    //     unique: true
+    // },
     description: {
         type: String,
         required: false
@@ -40,6 +45,20 @@ const productSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Brand',
         required: false
+    },
+    // offer: { type: Number },
+    // pictures: [
+    //     { img: { type: String } }
+    // ],
+    reviews: [
+        {
+            product: { type: Schema.Types.ObjectId, ref: 'User' },
+            review: { type: Number }
+        }
+    ],
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
     },
 }, {timestamps: true});
 

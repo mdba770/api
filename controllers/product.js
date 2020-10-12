@@ -57,30 +57,31 @@ exports.createProduct = async (req, res, next) => {
             error.statusCode = 422;
             throw error;
         }
-        
-        let thumbnail = '';
-        if (req.file) {
-            thumbnail = req.file.path;
+        const productObj = {
+            title: req.body.title,
+            price: req.body.price,
+            creator: req.userId
         }
-        const title = req.body.title;
-        const description = req.body.description;
-        const shortDescription = req.body.shortDescription;
-        const enabled = req.body.enabled;
-        const quantity = req.body.quantity;
-        const price = req.body.price;
-        const brand = req.body.brand;
+        if(req.body.description !== null && req.body.description !== 'undefined'){
+            productObj.description = req.body.description;
+        }
+        if(req.body.shortDescription !== null && req.body.shortDescription !== 'undefined'){
+            productObj.shortDescription = req.body.shortDescription;
+        }
+        if(req.body.enabled !== null && req.body.enabled !== 'undefined'){
+            productObj.enabled = req.body.enabled;
+        }
+        if(req.body.quantity !== null && req.body.quantity !== 'undefined'){
+            productObj.quantity = req.body.quantity;
+        }
+        if(req.body.brand !== null && req.body.brand !== 'undefined'){
+            productObj.brand = req.body.brand;
+        }
+        if (req.file) {
+            productObj.thumbnail = req.file.path;
+        }
 
-        const product = new Product({
-            title: title,
-            description: description,
-            shortDescription: shortDescription,
-            enabled: enabled,
-            quantity: quantity,
-            price: price,
-            thumbnail: thumbnail,
-            creator: req.userId,
-            brand: brand
-        });
+        const product = new Product(productObj);
     
         await product.save();
             const user = await User.findById(req.userId);
@@ -113,20 +114,6 @@ exports.updateProduct = async (req, res, next) => {
             throw error;
         }
 
-        let thumbnail = req.body.thumbnail;
-        const title = req.body.title;
-        const description = req.body.description;
-        const shortDescription = req.body.shortDescription;
-        const enabled = req.body.enabled;
-        const quantity = req.body.quantity;
-        const price = req.body.price;
-        let brand = '';
-        if (req.body.brand) {
-            brand = req.body.brand;
-        }
-        if(req.file) {
-            thumbnail = req.file.path;
-        }
         const product = await Product.findById(productId);
     
         if(!product) {
@@ -135,18 +122,31 @@ exports.updateProduct = async (req, res, next) => {
             throw error;
         }
 
-        if(thumbnail !== product.thumbnail) {
-            clearImage(product.thumbnail);
+        if(req.file) {
+            if(product.thumbnail !== null){
+                clearImage(product.thumbnail);
+            }
+            product.thumbnail = req.file.path;
         }
 
-        product.thumbnail = thumbnail;
-        product.title = title;
-        product.description = description;
-        product.shortDescription = shortDescription;
-        product.enabled = enabled;
-        product.quantity = quantity;
-        product.price = price;
-        product.brand = brand;
+        product.title = req.body.title;
+        product.price = req.body.price;
+
+        if(req.body.description !== null && req.body.description !== 'undefined'){
+            product.description = req.body.description;
+        }
+        if(req.body.shortDescription !== null && req.body.shortDescription !== 'undefined'){
+            product.shortDescription = req.body.shortDescription;
+        }
+        if(req.body.enabled !== null && req.body.enabled !== 'undefined'){
+            product.enabled = req.body.enabled;
+        }
+        if(req.body.quantity !== null && req.body.quantity !== 'undefined'){
+            product.quantity = req.body.quantity;
+        }
+        if (req.body.brand !== null && req.body.brand !== 'undefined') {
+            product.brand = req.body.brand;
+        }
 
         const result = await  product.save();
         

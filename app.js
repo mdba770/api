@@ -16,7 +16,9 @@ const productRoutes = require('./routes/product');
 const frontProductRoutes = require('./routes/front/product');
 const brandRoutes = require('./routes/brand');
 const frontCartRoutes = require('./routes/front/cart');
+const categoryRoutes = require('./routes/category');
 require('dotenv').config();
+const shortid = require('shortid');
 
 
 // configuration
@@ -26,7 +28,7 @@ const fileStorage = multer.diskStorage({
         cb(null, 'images');
     },
     filename: (req,file,cb) => {
-        cb(null, new Date().toISOString() + '-' + file.originalname);
+        cb(null, shortid.generate() + '-' + file.originalname);
     }
 });
 const fileFilter = (req, file, cb) => {
@@ -67,6 +69,7 @@ app.use('/product', productRoutes);
 app.use('/front/product', frontProductRoutes);
 app.use('/brand', brandRoutes);
 app.use('/front/cart', frontCartRoutes);
+app.use('/category', categoryRoutes);
 
 
 // errors

@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const {validationResult} = require('express-validator');
 const Brand = require('../models/brand');
-const User = require('../models/user');
 
 exports.getBrands = async (req, res, next) => {
     const currentPage = req.query.page || 1;

@@ -26,7 +26,7 @@ exports.signup = async (req, res, next) => {
         const token = jwt.sign({
             email: result.email,
             userId: result._id.toString()
-        }, process.env.JSONWEBTOKEN_SECRET, { expiresIn: '1h' });
+        }, process.env.JSONWEBTOKEN_, { expiresIn: '1h' });
 
         res.status(201).json({
             message: 'Customer created.',
