@@ -46,15 +46,15 @@ const customerSchema = new Schema({
     }
 }, {timestamps: true});
 
-customerSchema.virtual('password')
-    .set(function(password) {
-        this.hashPassword = bcrypt.hashSync(password, 12);
-    }
-);
+// customerSchema.virtual('password')
+//     .set(function(password) {
+//         this.hashPassword = bcrypt.hashSync(password, 12);
+//     }
+// );
 
-customerSchema.methods.authenticate = function(password) {
-    return bcrypt.compareSync(password, this.hashPassword);
-}
+// customerSchema.methods.authenticate = function(password) {
+//     return bcrypt.compareSync(password, this.hashPassword);
+// }
 
 customerSchema.methods.addToCart = function(product, quantity) {
     const cartProductIndex = this.cart.items.findIndex(cp => {

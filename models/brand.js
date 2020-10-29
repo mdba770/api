@@ -2,9 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const brandSchema = new Schema({
-    title: {
+    name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true
     },
     description: {
         type: String,

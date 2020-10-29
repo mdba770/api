@@ -12,7 +12,7 @@ router.get('/brand/:brandId', brandController.getBrand);
 
 // POST /brand/brand
 router.post('/brand', isAuth, [
-    body('title')
+    body('name')
         .isLength({min: 3})
         .trim()
 ], brandController.createBrand);

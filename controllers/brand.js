@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const {validationResult} = require('express-validator');
 const Brand = require('../models/brand');
+const slugify = require('slugify');
 
 exports.getBrands = async (req, res, next) => {
     const currentPage = req.query.page || 1;
@@ -52,32 +53,32 @@ exports.createBrand = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const error = new Error('Validation failed, entered data is incorrect.');
+            // const error = new Error('Validation failed, entered data is incorrect.');
+            const error = new Error(errors.array()[0].msg);
             error.statusCode = 422;
+            error.data = errors.array();
             throw error;
         }
 
-        const title = req.body.title;
-        let description = '';
+        const brandObj = {
+            name: req.body.name,
+            slug: slugify(req.body.name),
+            creator: req.userId
+        };
+    
         if (req.body.description) {
-            description = req.body.description;
+            brandObj.description = req.body.description;
         }
-        let shortDescription = '';
+        
         if (req.body.shortDescription) {
-            shortDescription = req.body.shortDescription;
+            brandObj.shortDescription = req.body.shortDescription;
         }
-        let thumbnail = '';
+        
         if (req.file) {
-            thumbnail = req.file.path;
+            brandObj.thumbnail = req.file.path;
         }
 
-        const brand = new Brand({
-            title: title,
-            description: description,
-            shortDescription: shortDescription,
-            thumbnail: thumbnail,
-            creator: req.userId
-        });
+        const brand = new Brand(brandObj);
     
         await brand.save();
 
@@ -104,7 +105,7 @@ exports.updateBrand = async (req, res, next) => {
         }
 
         let thumbnail = req.body.thumbnail;
-        const title = req.body.title;
+        const name = req.body.name;
         const description = req.body.description;
         const shortDescription = req.body.shortDescription;
         if(req.file) {
@@ -123,7 +124,7 @@ exports.updateBrand = async (req, res, next) => {
         }
 
         brand.thumbnail = thumbnail;
-        brand.title = title;
+        brand.name = name;
         brand.description = description;
         brand.shortDescription = shortDescription;
 

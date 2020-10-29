@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Customer = require('../../models/customer');
 
@@ -15,10 +15,10 @@ exports.signup = async (req, res, next) => {
         }
 
         const { email, firstName, lastName, password } = req.body;
-        // const hashedPw = await bcrypt.hash(password, 12);
+        const hashPassword = await bcrypt.hash(password, 12);
         const customer = new Customer({
             email,
-            password,
+            hashPassword,
             firstName,
             lastName
         });
@@ -26,7 +26,7 @@ exports.signup = async (req, res, next) => {
         const token = jwt.sign({
             email: result.email,
             userId: result._id.toString()
-        }, process.env.JSONWEBTOKEN_, { expiresIn: '1h' });
+        }, process.env.JSONWEBTOKEN_SECRET, { expiresIn: '1h' });
 
         res.status(201).json({
             message: 'Customer created.',
@@ -60,8 +60,8 @@ exports.login = async (req, res, next) => {
             throw error;
         }
 
-        // const isEqual = await bcrypt.compare(password, customer.password);
-        const isEqual = customer.authenticate(password);
+        const isEqual = await bcrypt.compare(password, customer.hashPassword);
+        // const isEqual = customer.authenticate(password);
 
         if (!isEqual) {
             const error = new Error('Wrong email or password.');
