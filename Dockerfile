@@ -1,5 +1,5 @@
-FROM alpine:3.7
-RUN echo -e "http://nl.alpinelinux.org/alpine/v3.7/main\nhttp://nl.alpinelinux.org/alpine/v3.7/community" > /etc/apk/repositories
+FROM alpine:3.8
+RUN echo -e "http://nl.alpinelinux.org/alpine/v3.8/main\nhttp://nl.alpinelinux.org/alpine/v3.8/community" > /etc/apk/repositories
 RUN apk update
 RUN apk upgrade
 RUN apk add curl
