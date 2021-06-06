@@ -1,9 +1,10 @@
-FROM ubuntu:20.04
-RUN apt-get update
-RUN  apt -y install gcc g++ make curl
-RUN curl -sL https://deb.nodesource.com/setup_14.x |  bash -
-RUN  apt -y install nodejs
-COPY . api
+FROM alpine:3.7
+RUN apk update
+RUN apk upgrade
+RUN apk add curl
+RUN apk add  build-base
+RUN apk add --update nodejs nodejs-npm
+COPY  . api
 EXPOSE 3000
 RUN cd api && npm install
 CMD npm start  -prefix /api/
