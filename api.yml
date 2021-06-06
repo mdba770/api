@@ -6,8 +6,8 @@ metadata:
     field.cattle.io/creatorId: user-lw29w 
   labels:
     cattle.io/creator: norman
-    workload.user.cattle.io/workloadselector: deployment-default-back
-  name: back
+    workload.user.cattle.io/workloadselector: deployment-default-api
+  name: api
   namespace: default
 spec:
   progressDeadlineSeconds: 600
@@ -15,7 +15,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      workload.user.cattle.io/workloadselector: deployment-default-back
+      workload.user.cattle.io/workloadselector: deployment-default-api
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -24,17 +24,17 @@ spec:
   template:
     metadata:
       annotations:
-        field.cattle.io/ports: '[[{"containerPort":3000,"dnsName":"back","hostPort":0,"kind":"ClusterIP","name":"tcpport01","protocol":"TCP","sourcePort":0}]]'
+        field.cattle.io/ports: '[[{"containerPort":5000,"dnsName":"api","hostPort":0,"kind":"ClusterIP","name":"tcpport01","protocol":"TCP","sourcePort":0}]]'
       creationTimestamp: null
       labels:
-        workload.user.cattle.io/workloadselector: deployment-default-back
+        workload.user.cattle.io/workloadselector: deployment-default-api
     spec:
       containers:
-      - image: mdb770/back:latest
+      - image: mdb770/api:latest
         imagePullPolicy: Always
-        name: back
+        name: api
         ports:
-        - containerPort: 3000
+        - containerPort: 5000
           name: tcpport01
           protocol: TCP
         resources: {}
@@ -55,3 +55,4 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
+ 
