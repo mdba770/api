@@ -1,10 +1,4 @@
-FROM alpine:3.8
-RUN echo -e "http://nl.alpinelinux.org/alpine/v3.8/main\nhttp://nl.alpinelinux.org/alpine/v3.8/community" > /etc/apk/repositories
-RUN apk update
-RUN apk upgrade
-RUN apk add curl
-RUN apk add  build-base
-RUN apk add --update nodejs nodejs-npm
+FROM node:16
 COPY  . api
 EXPOSE 5000
 RUN cd api && npm install
