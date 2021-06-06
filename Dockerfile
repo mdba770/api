@@ -5,6 +5,6 @@ RUN apk add curl
 RUN apk add  build-base
 RUN apk add --update nodejs nodejs-npm
 COPY  . api
-EXPOSE 3000
+EXPOSE 5000
 RUN cd api && npm install
 CMD npm start  -prefix /api/
