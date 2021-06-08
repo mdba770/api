@@ -2,6 +2,8 @@ FROM alpine:3.11
 
 ENV NODE_VERSION 16.3.0
 
+RUN echo -e "http://nl.alpinelinux.org/alpine/v3.5/main\nhttp://nl.alpinelinux.org/alpine/v3.5/community" > /etc/apk/repositories 
+
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node \
     && apk add --no-cache \
