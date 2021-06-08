@@ -1,4 +1,4 @@
-FROM node:16:alpine
+FROM node:16-alpine
 COPY  . api
 EXPOSE 5000
 RUN cd api && npm install
