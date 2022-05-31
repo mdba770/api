@@ -24,6 +24,6 @@ jobs:
     - name: Build the Docker image
       env:
         IMAGE_TAG: ${{ github.sha }}
-      run: docker build  --file Dockerfile --tag mdb770/api:$IMAGE_TAG
+      run: docker build . --file Dockerfile --tag mdb770/api:$IMAGE_TAG
     - name: Docker Push
       run: docker push mdb770/api:$IMAGE_TAG
