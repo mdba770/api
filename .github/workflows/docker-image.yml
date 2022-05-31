@@ -23,7 +23,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       env:
-        IMAGE_TAG: ${{ github.commit }}
+        GIT_HASH: $(git rev-parse --short "$GITHUB_SHA")
+        IMAGE_TAG: $GIT_HASH
       run: |
            docker build . --file Dockerfile --tag mdb770/api:$IMAGE_TAG
            docker push mdb770/api:$IMAGE_TAG
