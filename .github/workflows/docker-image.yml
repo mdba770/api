@@ -3,6 +3,8 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+    tags:
+      - '*'
 
 
 jobs:
@@ -16,10 +18,11 @@ jobs:
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        IMAGE_TAG: ${{ env.GIT_TAG }}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag mdb770/api:latest
+      run: docker build . --file Dockerfile --tag mdb770/api:$IMAGE_TAG
     - name: Docker Push
-      run: docker push mdb770/api:latest
+      run: docker push mdb770/api:$IMAGE_TAG
