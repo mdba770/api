@@ -1,17 +1,15 @@
 name: Docker Image CI
+
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
-
+    
+env:
+  IMAGE_TAG: ${{ github.sha }}
+     
 jobs:
-
   build:
-
     runs-on: self-hosted
-
     steps:
     - name: docker login
       env:
@@ -21,9 +19,13 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - uses: actions/checkout@v3
     - name: Build and push to Dockehub
-      env:
-        SHA: ${{ github.sha }}
       run: |
-           IMAGE_TAG=${SHA::7}
            docker build . --file Dockerfile --tag mdb770/api:$IMAGE_TAG
            docker push mdb770/api:$IMAGE_TAG
+    - name: deploy to cluster
+      uses: ghostzero/kubectl@v1
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        
+      with:
+        args: set image --record deployment/api front=mdb770/api:$IMAGE_TAG
