@@ -11,6 +11,8 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
+    - name: Add SHORT_SHA env property with commit short sha
+      run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
     - name: docker login
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
@@ -20,12 +22,12 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build and push to Dockehub
       run: |
-           docker build . --file Dockerfile --tag mdb770/api:$IMAGE_TAG
-           docker push mdb770/api:$IMAGE_TAG
+           docker build . --file Dockerfile --tag mdb770/api:$SHORT_SHA
+           docker push mdb770/api:$SHORT_SHA
     - name: deploy to cluster
       uses: ghostzero/kubectl@v1
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         
       with:
-        args: set image --record deployment/api api=mdb770/api:$IMAGE_TAG
+        args: set image --record deployment/api api=mdb770/api:$SHORT_SHA
